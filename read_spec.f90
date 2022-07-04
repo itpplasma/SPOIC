@@ -1,6 +1,7 @@
 ! This file contains the reading routines from the SPEC code in Utilities/read_spec.f90
 ! auto-created by a user called 'jonathan' on a machine called 'Nebuchadnezaar' at 06/01/2020 13:40:26 UTC
 module read_spec
+  implicit none
   TYPE physics
       INTEGER :: Igeometry
       INTEGER :: Istellsym
