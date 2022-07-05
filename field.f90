@@ -3,7 +3,7 @@ module field_mod
     implicit none
 
     type :: Field
-      integer :: field_type  ! -1: testing, 0: canonical, 2: Boozer
+      real(8) :: epsmn = 0.001d0  ! Perturbation strength
       real(8) :: Ath, Aph
       real(8), dimension(3) :: dAth, dAph
       ! second derivatives: drdr, drdth, drdph, dthdth, dthdph, dphdph
@@ -30,15 +30,15 @@ module field_mod
        sth = sin(th)
 
        f%Ath = B0*(r**2/2d0 - r**3/(3d0*R0)*cth)
-       f%Aph = -B0*iota0*(r**2/2d0-r**4/(4d0*a**2))
+       f%Aph = -B0*iota0*(r**2/2d0-r**4/(4d0*a**2))   + f%epsmn*cos(2d0*th + ph)
 
        f%dAth(1) = B0*(r - r**2/R0*cth)
        f%dAth(2) = B0*r**3*sth/(3.0*R0)
        f%dAth(3) = 0d0
 
        f%dAph(1) = -B0*iota0*(r-r**3/a**2)
-       f%dAph(2) = 0d0
-       f%dAph(3) = 0d0
+       f%dAph(2) = 0d0    - f%epsmn*2d0*sin(2d0*th + ph)
+       f%dAph(3) = 0d0    - f%epsmn*sin(2d0*th + ph)
 
        if (mode_secders <= 0) return
 

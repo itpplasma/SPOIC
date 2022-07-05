@@ -25,12 +25,12 @@
     lss = st(1) ; teta = st(2)
     lvol = ivol
 
-    write(*,*) "reading '",filename,"'..."
+    !write(*,*) "reading '",filename,"'..."
     call loadSpec(s, filename)
-    write(*,*) "done"
+    !write(*,*) "done"
 
-    write(*,"(A,F4.2)") "SPEC version: ", s%version
-    write(*,"(A,99I4)") "Lrad:", s%input%physics%Lrad
+    !write(*,"(A,F4.2)") "SPEC version: ", s%version
+    !write(*,"(A,99I4)") "Lrad:", s%input%physics%Lrad
 
     associate(Lrad => s%input%physics%Lrad, &
       Mpol => s%input%physics%Mpol, mn => s%output%mn, &
@@ -54,13 +54,13 @@
       if( Lcoordinatesingularity ) sbar = max( ( lss + one ) * half, small )
 
       if (Lcoordinatesingularity) then
-        print *, 'Zernike', sbar, Lrad(ivol), Mpol
+        !print *, 'Zernike', sbar, Lrad(ivol), Mpol
         call get_zernike(sbar, Lrad(ivol), Mpol, zernike(:,:,0:1))
-        print *, zernike(:,:,0:1)
+        !print *, zernike(:,:,0:1)
       else
-        print *, 'Cheby'
+        !print *, 'Cheby'
         call get_cheby(lss, Lrad(ivol), cheby(0:Lrad(ivol),0:1))
-        print *, cheby(0:Lrad(ivol),0:1)
+        !print *, cheby(0:Lrad(ivol),0:1)
       end if
 
       Az = 0d0
@@ -93,7 +93,7 @@
 
       enddo ! end of do ii = 1, mn;
 
-      print *, Az, At
+      !print *, Az, At
 
       call trace
 
@@ -107,23 +107,22 @@
       use field_mod, only: Field, eval_field
 
       type(Field) :: f
-      integer, parameter :: nphi = 64
+      integer, parameter :: nphi = 32, nturn = 20
       integer :: i, j
-      real(8) :: x(3), r, Athold, h, fun, dfun
+      real(8) :: z(3), r, Athold, h, fun, dfun
 
-      x(1) = 0.5d0; r = x(1)
-      x(2) = 0.1d0
-      x(3) = 0.2d0
+      z(1) = 0.3d0; r = z(1)
+      z(2) = 0.1d0
+      z(3) = 0.2d0
 
       h = 2d0*3.14159265358979323846d0/nphi
 
-      call eval_field(f, x(1), x(2), x(3), 1)
+      call eval_field(f, z(1), z(2), z(3), 1)
       Athold = f%Ath
 
-      do i = 1,100
-        print *, r
+      do i = 1,nturn*nphi
         do j = 1,10
-          call eval_field(f, r, x(2), x(3), 1)
+          call eval_field(f, r, z(2), z(3), 1)
           fun = f%dAth(1)*(f%Ath - Athold) &
               + h*(f%dAph(2)*f%dAth(1) - f%dAph(1)*f%dAth(2))
           dfun = f%d2Ath(1)*(f%Ath - Athold) + f%dAth(1)**2 &
@@ -131,9 +130,11 @@
                   - f%d2Aph(1)*f%dAth(2) - f%dAph(1)*f%d2Ath(2))
 
           r = r - fun/dfun
-          print *, r, fun
         end do
+        call eval_field(f, r, z(2), z(3), 1)
         Athold = f%Ath
+        z(1) = r; z(2) = z(2) + h*f%dAph(1)/f%dAth(1); z(3) = z(3) + h
+        print *, z
       end do
     end subroutine trace
 
