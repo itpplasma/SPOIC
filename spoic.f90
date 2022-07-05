@@ -107,34 +107,36 @@
       use field_mod, only: Field, eval_field
 
       type(Field) :: f
-      integer, parameter :: nphi = 32, nturn = 20
-      integer :: i, j
+      integer, parameter :: nr = 16, nphi = 32, nturn = 500
+      integer :: i, j, k
       real(8) :: z(3), r, Athold, h, fun, dfun
-
-      z(1) = 0.3d0; r = z(1)
-      z(2) = 0.1d0
-      z(3) = 0.2d0
 
       h = 2d0*3.14159265358979323846d0/nphi
 
-      call eval_field(f, z(1), z(2), z(3), 1)
-      Athold = f%Ath
+      do k = 1, nr
+        z(1) = k*0.4d0/nr; r = z(1)
+        z(2) = 0.1d0
+        z(3) = 0.2d0
 
-      do i = 1,nturn*nphi
-        do j = 1,10
-          call eval_field(f, r, z(2), z(3), 1)
-          fun = f%dAth(1)*(f%Ath - Athold) &
-              + h*(f%dAph(2)*f%dAth(1) - f%dAph(1)*f%dAth(2))
-          dfun = f%d2Ath(1)*(f%Ath - Athold) + f%dAth(1)**2 &
-               + h*(f%d2Aph(2)*f%dAth(1) + f%dAph(2)*f%d2Ath(1) &
-                  - f%d2Aph(1)*f%dAth(2) - f%dAph(1)*f%d2Ath(2))
-
-          r = r - fun/dfun
-        end do
-        call eval_field(f, r, z(2), z(3), 1)
+        call eval_field(f, z(1), z(2), z(3), 1)
         Athold = f%Ath
-        z(1) = r; z(2) = z(2) + h*f%dAph(1)/f%dAth(1); z(3) = z(3) + h
-        print *, z
+
+        do i = 1,nturn*nphi
+          do j = 1,10
+            call eval_field(f, r, z(2), z(3), 1)
+            fun = f%dAth(1)*(f%Ath - Athold) &
+                + h*(f%dAph(2)*f%dAth(1) - f%dAph(1)*f%dAth(2))
+            dfun = f%d2Ath(1)*(f%Ath - Athold) + f%dAth(1)**2 &
+                + h*(f%d2Aph(2)*f%dAth(1) + f%dAph(2)*f%d2Ath(1) &
+                    - f%d2Aph(1)*f%dAth(2) - f%dAph(1)*f%d2Ath(2))
+
+            r = r - fun/dfun
+          end do
+          call eval_field(f, r, z(2), z(3), 1)
+          Athold = f%Ath
+          z(1) = r; z(2) = z(2) + h*f%dAph(1)/f%dAth(1); z(3) = z(3) + h
+          print *, z
+        end do
       end do
     end subroutine trace
 
