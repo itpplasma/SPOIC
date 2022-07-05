@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.7)
 
 project(spoic LANGUAGES C Fortran)
 
+add_compile_options(-fbacktrace -g)
+
 find_package(HDF5 COMPONENTS C Fortran HL REQUIRED)
 message(STATUS "HDF5 libraries found: ${HDF5_FOUND}")
 message(STATUS "HDF5 C include directors : ${HDF5_C_INCLUDE_DIRS}")

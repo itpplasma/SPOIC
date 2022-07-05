@@ -1,1 +1,4 @@
 BUILD/*
+RUN/*.h5
+RUN/.*
+RUN/*.end
