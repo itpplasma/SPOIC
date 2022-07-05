@@ -16,7 +16,8 @@ target_link_libraries(spoic.x PUBLIC
     spoic ${HDF5_Fortran_LIBRARIES} ${HDF5_C_LIBRARIES})
 
 add_library(spoic
-read_spec.f90
+    read_spec.f90
+    field.f90
 )
 target_link_libraries(spoic PUBLIC spec ${HDF5_Fortran_LIBRARIES} ${HDF5_C_LIBRARIES})
 target_include_directories(spoic PUBLIC ${HDF5_C_INCLUDE_DIRS} ${HDF5_Fortran_INCLUDE_DIRS})

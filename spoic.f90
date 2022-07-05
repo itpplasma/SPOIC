@@ -5,27 +5,25 @@
     type(SpecOutput) :: s
     character(*), parameter :: filename = 'test.sp.h5'
 
-    real(8) :: lvol
     logical :: Lcoordinatesingularity
 
     integer, parameter :: ivol = 1
-    real(8), allocatable :: cheby(:,:), zernike(:,:,:)
+    real(8), allocatable :: cheby(:,:), zernike(:,:,:), TT(:,:)
 
     real(8), parameter :: zero=0.0d0, one=1.0d0, half=0.5d0
     real(8), parameter :: machprec=1.11d-16, small = 10000*machprec
-    real(8) :: st(2), zeta, lss, teta, sbar
+    real(8) :: st(2), zeta, lss, teta, sbar, arg, carg, sarg
 
-    double precision :: x_dp
-    real(8) :: x_real
-    real :: x_real4
+    integer :: lvol, ii, ll, mi, ni
 
-    print *, kind(x_dp), kind(x_real), kind(x_real4), kind(1.0e0)
+    real(8) :: Az, At
 
     zeta = 0.3
     st(1) = 0.3
     st(2) = 0.5
 
     lss = st(1) ; teta = st(2)
+    lvol = ivol
 
     write(*,*) "reading '",filename,"'..."
     call loadSpec(s, filename)
@@ -35,9 +33,13 @@
     write(*,"(A,99I4)") "Lrad:", s%input%physics%Lrad
 
     associate(Lrad => s%input%physics%Lrad, &
-      Mpol => s%input%physics%Mpol)
+      Mpol => s%input%physics%Mpol, mn => s%output%mn, &
+      im => s%output%im, in => s%output%in, &
+      Aze => s%vector_potential%Aze, Ate => s%vector_potential%Ate, &
+      Azo => s%vector_potential%Azo, Ato => s%vector_potential%Ato)
 
-      allocate(cheby(0:Lrad(ivol),0:1), zernike(0:Lrad(1),0:Mpol,0:1))
+      allocate(cheby(0:Lrad(ivol),0:1), zernike(0:Lrad(1),0:Mpol,0:1), &
+        TT(0:Lrad(ivol),0:1))
 
       if (lvol < 1) then
         Lcoordinatesingularity=.True.
@@ -61,10 +63,87 @@
         print *, cheby(0:Lrad(ivol),0:1)
       end if
 
+      Az = 0d0
+      At = 0d0
 
-9999  deallocate(cheby, zernike)
+      do ii = 1, mn ; mi = im(ii) ; ni = in(ii) ; arg = mi * teta - ni * zeta ; carg = cos(arg) ; sarg = sin(arg) ! shorthand; 20 Apr 13;
+
+        !-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!
+
+        if( Lcoordinatesingularity ) then ! regularization factor depends on mi; 17 Dec 15;
+
+        do ll = 0, Lrad(lvol) ; TT(ll,0:1) = (/        zernike(ll,mi,0),        zernike(ll,mi,1)*half                      /)
+        enddo
+
+        else
+
+        do ll = 0, Lrad(lvol) ; TT(ll,0:1) = (/             cheby(ll,0),             cheby(ll,1)                           /)
+        enddo
+
+        endif ! end of if( Lcoordinatesingularity ) ; 16 Jan 15;
+
+    !-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!
+
+        do ll = 0, Lrad(lvol) ! loop over Chebyshev summation; 20 Feb 13;
+          Az = Az + Aze(lvol,ii) * TT(ll,0) * carg + Azo(lvol,ii) * TT(ll,0) * sarg
+          At = At + Ate(lvol,ii) * TT(ll,0) * carg + Ato(lvol,ii) * TT(ll,0) * sarg
+        enddo ! end of do ll; 10 Dec 15;
+
+    !-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!
+
+      enddo ! end of do ii = 1, mn;
+
+      print *, Az, At
+
+      call trace
 
     end associate
 
-    call freeSpec(s)
+9999 call finalize
+
+  contains
+
+    subroutine trace
+      use field_mod, only: Field, eval_field
+
+      type(Field) :: f
+      integer, parameter :: nphi = 64
+      integer :: i, j
+      real(8) :: x(3), r, Athold, h, fun, dfun
+
+      x(1) = 0.5d0; r = x(1)
+      x(2) = 0.1d0
+      x(3) = 0.2d0
+
+      h = 2d0*3.14159265358979323846d0/nphi
+
+      call eval_field(f, x(1), x(2), x(3), 1)
+      Athold = f%Ath
+
+      do i = 1,100
+        print *, r
+        do j = 1,10
+          call eval_field(f, r, x(2), x(3), 1)
+          fun = f%dAth(1)*(f%Ath - Athold) &
+              + h*(f%dAph(2)*f%dAth(1) - f%dAph(1)*f%dAth(2))
+          dfun = f%d2Ath(1)*(f%Ath - Athold) + f%dAth(1)**2 &
+               + h*(f%d2Aph(2)*f%dAth(1) + f%dAph(2)*f%d2Ath(1) &
+                  - f%d2Aph(1)*f%dAth(2) - f%dAph(1)*f%d2Ath(2))
+
+          r = r - fun/dfun
+          print *, r, fun
+        end do
+        Athold = f%Ath
+      end do
+    end subroutine trace
+
+    subroutine initialize
+      ! TODO: Allocate zernike, cheby and TT based on maximum shape
+    end subroutine initialize
+
+    subroutine finalize
+      deallocate(cheby, zernike)
+      call freeSpec(s)
+    end subroutine finalize
+
   end program test_read_spec

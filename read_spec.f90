@@ -6,52 +6,52 @@ module read_spec
       INTEGER :: Igeometry
       INTEGER :: Istellsym
       INTEGER :: Lfreebound
-      DOUBLE PRECISION :: phiedge
-      DOUBLE PRECISION :: curtor
-      DOUBLE PRECISION :: curpol
-      DOUBLE PRECISION :: gamma
+      REAL(8) :: phiedge
+      REAL(8) :: curtor
+      REAL(8) :: curpol
+      REAL(8) :: gamma
       INTEGER :: Nfp
       INTEGER :: Nvol
       INTEGER :: Mpol
       INTEGER :: Ntor
       INTEGER, ALLOCATABLE :: Lrad(:)
       INTEGER :: Lconstraint
-      DOUBLE PRECISION, ALLOCATABLE :: tflux(:)
-      DOUBLE PRECISION, ALLOCATABLE :: pflux(:)
-      DOUBLE PRECISION, ALLOCATABLE :: helicity(:)
-      DOUBLE PRECISION :: pscale
-      DOUBLE PRECISION, ALLOCATABLE :: pressure(:)
+      REAL(8), ALLOCATABLE :: tflux(:)
+      REAL(8), ALLOCATABLE :: pflux(:)
+      REAL(8), ALLOCATABLE :: helicity(:)
+      REAL(8) :: pscale
+      REAL(8), ALLOCATABLE :: pressure(:)
       INTEGER :: Ladiabatic
-      DOUBLE PRECISION, ALLOCATABLE :: adiabatic(:)
-      DOUBLE PRECISION, ALLOCATABLE :: mu(:)
+      REAL(8), ALLOCATABLE :: adiabatic(:)
+      REAL(8), ALLOCATABLE :: mu(:)
       INTEGER, ALLOCATABLE :: pl(:)
       INTEGER, ALLOCATABLE :: ql(:)
       INTEGER, ALLOCATABLE :: pr(:)
       INTEGER, ALLOCATABLE :: qr(:)
-      DOUBLE PRECISION, ALLOCATABLE :: iota(:)
+      REAL(8), ALLOCATABLE :: iota(:)
       INTEGER, ALLOCATABLE :: lp(:)
       INTEGER, ALLOCATABLE :: lq(:)
       INTEGER, ALLOCATABLE :: rp(:)
       INTEGER, ALLOCATABLE :: rq(:)
-      DOUBLE PRECISION, ALLOCATABLE :: oita(:)
-      DOUBLE PRECISION :: mupftol
+      REAL(8), ALLOCATABLE :: oita(:)
+      REAL(8) :: mupftol
       INTEGER :: mupfits
-      DOUBLE PRECISION, ALLOCATABLE :: Rac(:)
-      DOUBLE PRECISION, ALLOCATABLE :: Zas(:)
-      DOUBLE PRECISION, ALLOCATABLE :: Ras(:)
-      DOUBLE PRECISION, ALLOCATABLE :: Zac(:)
-      DOUBLE PRECISION, ALLOCATABLE :: Rbc(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Zbs(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Rbs(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Zbc(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Rwc(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Zws(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Rws(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Zwc(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Vns(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Bns(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Vnc(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Bnc(:,:)
+      REAL(8), ALLOCATABLE :: Rac(:)
+      REAL(8), ALLOCATABLE :: Zas(:)
+      REAL(8), ALLOCATABLE :: Ras(:)
+      REAL(8), ALLOCATABLE :: Zac(:)
+      REAL(8), ALLOCATABLE :: Rbc(:,:)
+      REAL(8), ALLOCATABLE :: Zbs(:,:)
+      REAL(8), ALLOCATABLE :: Rbs(:,:)
+      REAL(8), ALLOCATABLE :: Zbc(:,:)
+      REAL(8), ALLOCATABLE :: Rwc(:,:)
+      REAL(8), ALLOCATABLE :: Zws(:,:)
+      REAL(8), ALLOCATABLE :: Rws(:,:)
+      REAL(8), ALLOCATABLE :: Zwc(:,:)
+      REAL(8), ALLOCATABLE :: Vns(:,:)
+      REAL(8), ALLOCATABLE :: Bns(:,:)
+      REAL(8), ALLOCATABLE :: Vnc(:,:)
+      REAL(8), ALLOCATABLE :: Bnc(:,:)
   END TYPE physics
   TYPE numerics
       INTEGER :: Linitialize
@@ -65,46 +65,46 @@ module read_spec
       INTEGER :: imethod
       INTEGER :: iorder
       INTEGER :: iprecon
-      DOUBLE PRECISION :: iotatol
+      REAL(8) :: iotatol
       INTEGER :: Lextrap
       INTEGER :: Mregular
   END TYPE numerics
   TYPE local
       INTEGER :: LBeltrami
       INTEGER :: Linitgues
-      DOUBLE PRECISION :: maxrndgues
+      REAL(8) :: maxrndgues
       INTEGER :: Lposdef
   END TYPE local
   TYPE global
       INTEGER :: Lfindzero
-      DOUBLE PRECISION :: escale
-      DOUBLE PRECISION :: opsilon
-      DOUBLE PRECISION :: pcondense
-      DOUBLE PRECISION :: epsilon
-      DOUBLE PRECISION :: wpoloidal
-      DOUBLE PRECISION :: upsilon
-      DOUBLE PRECISION :: forcetol
-      DOUBLE PRECISION :: c05xmax
-      DOUBLE PRECISION :: c05xtol
-      DOUBLE PRECISION :: c05factor
+      REAL(8) :: escale
+      REAL(8) :: opsilon
+      REAL(8) :: pcondense
+      REAL(8) :: epsilon
+      REAL(8) :: wpoloidal
+      REAL(8) :: upsilon
+      REAL(8) :: forcetol
+      REAL(8) :: c05xmax
+      REAL(8) :: c05xtol
+      REAL(8) :: c05factor
       LOGICAL :: LreadGF
       INTEGER :: mfreeits
-      DOUBLE PRECISION :: bnstol
-      DOUBLE PRECISION :: bnsblend
-      DOUBLE PRECISION :: gBntol
-      DOUBLE PRECISION :: gBnbld
-      DOUBLE PRECISION :: vcasingeps
-      DOUBLE PRECISION :: vcasingtol
+      REAL(8) :: bnstol
+      REAL(8) :: bnsblend
+      REAL(8) :: gBntol
+      REAL(8) :: gBnbld
+      REAL(8) :: vcasingeps
+      REAL(8) :: vcasingtol
       INTEGER :: vcasingits
       INTEGER :: vcasingper
       INTEGER :: mcasingcal
   END TYPE global
   TYPE diagnostics
-      DOUBLE PRECISION :: odetol
-      DOUBLE PRECISION :: absreq
-      DOUBLE PRECISION :: relreq
-      DOUBLE PRECISION :: absacc
-      DOUBLE PRECISION :: epsr
+      REAL(8) :: odetol
+      REAL(8) :: absreq
+      REAL(8) :: relreq
+      REAL(8) :: absacc
+      REAL(8) :: epsr
       INTEGER :: nPpts
       INTEGER, ALLOCATABLE :: nPtrj(:)
       LOGICAL :: LHevalues
@@ -115,8 +115,8 @@ module read_spec
       INTEGER :: dqq
       INTEGER :: Lcheck
       LOGICAL :: Ltiming
-      DOUBLE PRECISION :: fudge
-      DOUBLE PRECISION :: scaling
+      REAL(8) :: fudge
+      REAL(8) :: scaling
   END TYPE diagnostics
   TYPE input
       TYPE(physics) :: physics
@@ -126,41 +126,41 @@ module read_spec
       TYPE(diagnostics) :: diagnostics
   END TYPE input
   TYPE output
-      DOUBLE PRECISION, ALLOCATABLE :: Vns(:)
-      DOUBLE PRECISION, ALLOCATABLE :: Bns(:)
-      DOUBLE PRECISION, ALLOCATABLE :: Vnc(:)
-      DOUBLE PRECISION, ALLOCATABLE :: Bnc(:)
+      REAL(8), ALLOCATABLE :: Vns(:)
+      REAL(8), ALLOCATABLE :: Bns(:)
+      REAL(8), ALLOCATABLE :: Vnc(:)
+      REAL(8), ALLOCATABLE :: Bnc(:)
       INTEGER :: mn
       INTEGER, ALLOCATABLE :: im(:)
       INTEGER, ALLOCATABLE :: in(:)
       INTEGER :: Mvol
-      DOUBLE PRECISION, ALLOCATABLE :: Rbc(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Zbs(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Rbs(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Zbc(:,:)
-      DOUBLE PRECISION :: ForceErr
-      DOUBLE PRECISION, ALLOCATABLE :: adiabatic(:)
-      DOUBLE PRECISION, ALLOCATABLE :: helicity(:)
-      DOUBLE PRECISION, ALLOCATABLE :: mu(:)
-      DOUBLE PRECISION, ALLOCATABLE :: tflux(:)
-      DOUBLE PRECISION, ALLOCATABLE :: pflux(:)
-      DOUBLE PRECISION :: volume
+      REAL(8), ALLOCATABLE :: Rbc(:,:)
+      REAL(8), ALLOCATABLE :: Zbs(:,:)
+      REAL(8), ALLOCATABLE :: Rbs(:,:)
+      REAL(8), ALLOCATABLE :: Zbc(:,:)
+      REAL(8) :: ForceErr
+      REAL(8), ALLOCATABLE :: adiabatic(:)
+      REAL(8), ALLOCATABLE :: helicity(:)
+      REAL(8), ALLOCATABLE :: mu(:)
+      REAL(8), ALLOCATABLE :: tflux(:)
+      REAL(8), ALLOCATABLE :: pflux(:)
+      REAL(8) :: volume
       INTEGER :: Mrad
-      DOUBLE PRECISION, ALLOCATABLE :: TT(:,:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Btemn(:,:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Bzemn(:,:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Btomn(:,:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Bzomn(:,:,:)
-      DOUBLE PRECISION :: lmns
+      REAL(8), ALLOCATABLE :: TT(:,:,:)
+      REAL(8), ALLOCATABLE :: Btemn(:,:,:)
+      REAL(8), ALLOCATABLE :: Bzemn(:,:,:)
+      REAL(8), ALLOCATABLE :: Btomn(:,:,:)
+      REAL(8), ALLOCATABLE :: Bzomn(:,:,:)
+      REAL(8) :: lmns
   END TYPE output
   TYPE vector_potential
-      DOUBLE PRECISION, ALLOCATABLE :: Ate(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Aze(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Ato(:,:)
-      DOUBLE PRECISION, ALLOCATABLE :: Azo(:,:)
+      REAL(8), ALLOCATABLE :: Ate(:,:)
+      REAL(8), ALLOCATABLE :: Aze(:,:)
+      REAL(8), ALLOCATABLE :: Ato(:,:)
+      REAL(8), ALLOCATABLE :: Azo(:,:)
   END TYPE vector_potential
   TYPE SpecOutput
-      DOUBLE PRECISION :: version
+      REAL(8) :: version
       TYPE(input) :: input
       TYPE(output) :: output
       TYPE(vector_potential) :: vector_potential
